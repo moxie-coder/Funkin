@@ -38,7 +38,11 @@ typedef RegistryTypeParams =
  */
 class RegistryMacro
 {
-  static final DATA_FILE_BASE_PATH:String = 'assets/preload/data';
+  #if ios
+  static final DATA_FILE_BASE_PATH:String = "../../../../../assets/preload/data";
+  #else
+  static final DATA_FILE_BASE_PATH:String = "assets/preload/data";
+  #end
 
   /**
    * Builds the registry class.
@@ -178,7 +182,7 @@ class RegistryMacro
           switch (this.loadEntryFile(id))
           {
             case {fileName: fileName, contents: contents}:
-              parser.fromJson(contents, fileName);
+              parser.fromJson(contents.substring(contents.indexOf("{"), contents.lastIndexOf("}") + 1), fileName);
             default:
               return null;
           }
