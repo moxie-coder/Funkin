@@ -1,5 +1,6 @@
 package funkin.ui.debug.charting.commands;
 
+#if FEATURE_CHART_EDITOR
 import funkin.data.song.SongData.SongEventData;
 import funkin.data.song.SongData.SongNoteData;
 import funkin.data.song.SongDataUtils;
@@ -18,12 +19,15 @@ class MoveItemsCommand implements ChartEditorCommand
   var offset:Float;
   var columns:Int;
 
-  public function new(notes:Array<SongNoteData>, events:Array<SongEventData>, offset:Float, columns:Int)
+  public function new(notes:Array<SongNoteData>, events:Array<SongEventData>, offset:Float, columns:Int, offsetInSteps:Bool = false,
+      roundStepTimeToNearestStep:Bool = false)
   {
     // Clone the notes to prevent editing from affecting the history.
     this.notes = notes.clone();
     this.events = events.clone();
-    this.offset = offset;
+    if (offsetInSteps) this.offset = Conductor.instance.getStepTimeInMs(offset);
+    else
+      this.offset = offset;
     this.columns = columns;
     this.movedNotes = [];
     this.movedEvents = [];
@@ -100,3 +104,4 @@ class MoveItemsCommand implements ChartEditorCommand
     return 'Move $len Items';
   }
 }
+#end

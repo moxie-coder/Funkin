@@ -13,7 +13,8 @@ class ReflectUtil
   /**
    * A list of field names which cannot be retrieved with `getAnonymousField()`
    */
-  static final FIELD_NAME_BLACKLIST:Array<String> = ['_interp'];
+  @:unreflective
+  static var FIELD_NAME_BLACKLIST:Array<String> = ['_interp'];
 
   /**
    * This function is not allowed to be used by scripts.
@@ -414,5 +415,14 @@ class ReflectUtil
     var cls = Type.getClass(obj);
     if (cls == null) return "Unknown";
     return Type.getClassName(cls);
+  }
+
+  /**
+   * Transform a function taking an array of arguments into a function that can
+   * be called with any number of arguments.
+   */
+  public static function makeVarArgs(f:Array<Dynamic>->Dynamic):Dynamic
+  {
+    return Reflect.makeVarArgs(f);
   }
 }

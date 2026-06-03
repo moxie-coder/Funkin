@@ -22,6 +22,13 @@ typedef LevelData =
   var name:String;
 
   /**
+   * Optional data for how a level title is labeled on a capsule.
+   * Used when displaying songs in Freeplay.
+   */
+  @:optional
+  var capsule:Null<LevelCapsuleData>;
+
+  /**
    * The graphic for the level, as seen in the scrolling list.
    */
   @:jcustomparse(funkin.data.DataParse.stringNotEmpty)
@@ -54,6 +61,24 @@ typedef LevelData =
   @:default('#F9CF51')
   @:optional
   var background:String;
+}
+
+/**
+ * Data for a level capsule text.
+ */
+typedef LevelCapsuleData =
+{
+  /**
+   * The label for the capsule text.
+   */
+  @:optional
+  var name:String;
+
+  /**
+   * The offset on the position to render the capsule text at.
+   */
+  @:optional
+  var offsets:Array<Float>;
 }
 
 /**
@@ -114,4 +139,26 @@ typedef LevelPropData =
   @:default([])
   @:optional
   var animations:Array<AnimationData>;
+
+  /**
+   * If animations are used, this is the name of the animation to play first.
+   * @default idle
+   */
+  @:default('')
+  @:optional
+  var startingAnimation:String;
+
+  /**
+   * Flips the sprite on X axis.
+   */
+  @:default(false)
+  @:optional
+  var flipX:Null<Bool>;
+  
+    /**
+   * Flips the sprite on Y axis.
+   */
+  @:default(false)
+  @:optional
+  var flipY:Null<Bool>;
 }

@@ -1,5 +1,6 @@
 package funkin.ui.debug.charting.commands;
 
+#if FEATURE_CHART_EDITOR
 import funkin.data.song.SongData.SongEventData;
 import funkin.data.song.SongData.SongNoteData;
 import funkin.data.song.SongDataUtils;
@@ -14,12 +15,16 @@ class MoveEventsCommand implements ChartEditorCommand
   var events:Array<SongEventData>;
   var movedEvents:Array<SongEventData>;
   var offset:Float;
+  var setPos:Bool;
 
-  public function new(events:Array<SongEventData>, offset:Float)
+  public function new(events:Array<SongEventData>, offset:Float, setPos:Bool = false, offsetInSteps:Bool = false)
   {
-    // Clone the notes to prevent editing from affecting the history.
+    // Clone the events to prevent editing from affecting the history.
     this.events = [for (event in events) event.clone()];
+    if (offsetInSteps) this.offset = Conductor.instance.getStepTimeInMs(offset);
+    else
     this.offset = offset;
+    this.setPos = setPos;
     this.movedEvents = [];
   }
 
@@ -31,8 +36,11 @@ class MoveEventsCommand implements ChartEditorCommand
 
     for (event in events)
     {
-      // Clone the notes to prevent editing from affecting the history.
+      // Clone the events to prevent editing from affecting the history.
       var resultEvent = event.clone();
+      // If setting position, use the offset as the resulting time
+      if (setPos) resultEvent.time = offset.clamp(0, Conductor.instance.getStepTimeInMs(state.songLengthInSteps - (1 * state.noteSnapRatio)));
+      else
       resultEvent.time = (resultEvent.time + offset).clamp(0, Conductor.instance.getStepTimeInMs(state.songLengthInSteps - (1 * state.noteSnapRatio)));
 
       movedEvents.push(resultEvent);
@@ -77,3 +85,4 @@ class MoveEventsCommand implements ChartEditorCommand
     return 'Move $len Events';
   }
 }
+#end
